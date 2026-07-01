@@ -2,7 +2,7 @@
 
 **Version:** 1.0
 **Date:** 2026-06-14
-**Author:** AI-Assisted
+**Author:** Dipanshu Choksi
 
 ## 1. Problem Statement
 
@@ -20,7 +20,7 @@ An AI-powered information triage and knowledge extraction system that fetches un
 
 ## 4. Key Features (MVP)
 
-- **Gmail Integration**: Fetch unread emails securely via Gmail API (read-only) using label filtering. For the MVP, users will provide their own Google Cloud Project credentials for OAuth. A centralized OAuth app is planned for post-MVP.
+- **Gmail Integration**: Users authenticate with Google OAuth 2.0 using Clario's OAuth application. After granting read-only Gmail access, Clario securely fetches unread emails from configured Gmail labels using the Gmail API. OAuth access and refresh tokens are securely stored to enable scheduled background processing without requiring users to sign in repeatedly.
 - **HTML Cleaning**: Strip ads, footers, tracking wrappers, and clutter while preserving links, code snippets, and image/diagram references.
 - **LLM Pipeline**: Extract core thesis, key insights, tools mentioned, important links, and actionable takeaways into a structured format.
 - **Daily Digest Generation**: Compile structured outputs into a single, scannable markdown digest stored in S3 and retrieved on the website. The digest generation will run on a user-configured schedule.
@@ -41,11 +41,10 @@ An AI-powered information triage and knowledge extraction system that fetches un
 - No multi-user collaboration architecture.
 - No complex dashboard ("second inbox" avoidance).
 - No support for experimental local models.
-- No centralized OAuth app for Gmail (planned for post-MVP).
 
 ## 7. Acceptance Criteria
 
-- **Gmail Integration**: Given the system runs on its user-configured schedule, when there are unread emails under the "newsletters" label, then it successfully fetches them without modifying the original emails in Gmail using the user's provided OAuth credentials.
+- **Gmail Integration**: Users can securely authenticate with Clario using Google OAuth 2.0 and grant read-only access to their Gmail. After successful authentication, Clario securely stores OAuth tokens and automatically fetches unread emails from specified Gmail labels on the user's configured schedule using the Gmail API without modifying original emails.
 - **HTML Cleaning**: Given a raw newsletter email, when it passes through the cleaner, then the output HTML/text is free of tracking links and ads, but retains original code blocks and image links.
 - **LLM Pipeline**: Given clean newsletter text, when processed by the LLM, then it outputs the required JSON structure (Core Thesis, Insights, Tools, Links) without hallucinating facts.
 - **Daily Digest Generation**: Given multiple structured JSON outputs, when compiled, then a single markdown digest is generated and emailed to the user.

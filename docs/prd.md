@@ -23,7 +23,7 @@ An AI-powered information triage and knowledge extraction system that fetches un
 - **Gmail Integration**: Users authenticate with Google OAuth 2.0 using Clario's OAuth application. After granting read-only Gmail access, Clario securely fetches unread emails from configured Gmail labels using the Gmail API. OAuth access and refresh tokens are securely stored to enable scheduled background processing without requiring users to sign in repeatedly.
 - **HTML Cleaning**: Strip ads, footers, tracking wrappers, and clutter while preserving links, code snippets, and image/diagram references.
 - **LLM Pipeline**: Extract core thesis, key insights, tools mentioned, important links, and actionable takeaways into a structured format.
-- **Daily Digest Generation**: Compile structured outputs into a single, scannable markdown digest stored in S3 and retrieved on the website. The digest generation will run on a user-configured schedule.
+- **Daily Digest Generation**: Compile structured outputs into a single, scannable markdown digest stored in a local folder and retrieved on the website. The digest generation will run on a user-configured schedule.
 - **PKM Export**: Allow simple markdown export of today's digest.
 
 ## 5. Success Metrics

@@ -1,7 +1,7 @@
 # Implementation Plan: CLario
 
 ## Phase 1: Foundation
-- [ ] Initialize Next.js project with TypeScript and Tailwind CSS
+- [x] Initialize Next.js project with TypeScript and Tailwind CSS
 - [ ] Set up Supabase project and database schema migrations
 - [ ] Configure NextAuth.js with Google Provider (using centralized Clario GCP credentials)
 - [ ] Set up basic UI shell and dashboard routing

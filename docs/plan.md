@@ -3,8 +3,8 @@
 ## Phase 1: Foundation
 - [x] Initialize Next.js project with TypeScript and Tailwind CSS
 - [x] Set up Supabase project and database schema migrations
-- [ ] Configure NextAuth.js with Google Provider (using centralized Clario GCP credentials)
-- [ ] Set up basic UI shell and dashboard routing
+- [x] Configure NextAuth.js with Google Provider (using centralized Clario GCP credentials)
+- [x] Set up basic UI shell and dashboard routing
 
 ## Phase 2: Core
 - [ ] Implement API endpoint for user schedule config

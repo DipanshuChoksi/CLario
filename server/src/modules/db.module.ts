@@ -1,20 +1,18 @@
-import { Mongoose, connect } from 'mongoose';
+import { createClient } from '@supabase/supabase-js';
+import { getEnvVariable } from '../env';
+import { BaseError } from '../shared';
 
-const databaseService = async (mongoURI: string) => {
-  console.info('<<<<< Connecting to database...');
+const supabaseUrl = getEnvVariable('SUPABASE_URL');
+const supabaseServiceRoleKey = getEnvVariable('SUPABASE_SERVICE_ROLE_KEY');
 
-  try {
-    await connect(mongoURI, {
-      autoIndex: true,
-    }).then((data: Mongoose) => {
-      console.info(`...database connected with ${data.connection.host} >>>>>`);
-    });
-  } catch (error: unknown | any) {
-    console.error(`Oops! Error connecting to database: ${error} \n >>>>>`);
 
-    // Retry again after 5 seconds
-    setTimeout(databaseService, 5000);
-  }
-};
+if (!supabaseUrl || !supabaseServiceRoleKey) {
+  throw new BaseError(
+    'Supabase URL or Service Role Key not specified, create variables SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env (see .env.example)'
+  );
+}
 
-export default databaseService;
+// Create a single supabase client for interacting with your database
+export const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+
+export default supabase;

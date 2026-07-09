@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Clario",
+  title: "CLario",
   description:
     "Transform newsletter overload into a clean, actionable intelligence feed for developers, founders, and technical learners.",
 };

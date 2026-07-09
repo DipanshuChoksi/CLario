@@ -11,7 +11,7 @@
 
 - [x] Implement API endpoint for user schedule config
 - [x] Create UI components for settings and digest history viewing
-- [ ] Implement Gmail API fetch logic (read-only for "newsletters" label)
+- [x] Implement Gmail API fetch logic (read-only for "newsletters" label)
 - [ ] Implement HTML cleaning utility to strip clutter and retain links/code
 
 ## Phase 3: Integration

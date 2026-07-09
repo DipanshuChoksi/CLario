@@ -3,6 +3,8 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import { BaseError, ErrorHandler, logger } from '@/shared';
+import { gmailRouter } from './gmail/router';
+
 
 const applicationModule = (ORIGINS: string[] = []): Application => {
   const app = express();
@@ -31,6 +33,8 @@ const applicationModule = (ORIGINS: string[] = []): Application => {
       message: 'API is working',
     });
   });
+
+  app.use('/api/gmail', gmailRouter);
 
   // Error Handling
   app.use(errorMiddleware);

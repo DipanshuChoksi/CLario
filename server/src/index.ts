@@ -10,7 +10,8 @@ export const startServer = async () => {
   }
 
 
-  const app = applicationModule();
+  const FRONTEND_URL = getEnvVariable('FRONTEND_URL') || 'http://localhost:3000';
+  const app = applicationModule([FRONTEND_URL]);
   const server = http.createServer(app);
 
 

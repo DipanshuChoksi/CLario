@@ -10,7 +10,7 @@
 ## Phase 2: Core
 
 - [x] Implement API endpoint for user schedule config
-- [ ] Create UI components for settings and digest history viewing
+- [x] Create UI components for settings and digest history viewing
 - [ ] Implement Gmail API fetch logic (read-only for "newsletters" label)
 - [ ] Implement HTML cleaning utility to strip clutter and retain links/code
 

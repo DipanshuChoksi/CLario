@@ -1,12 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 export function SettingsForm() {
+  const { data: session } = useSession();
   const [schedule, setSchedule] = useState("08:00");
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [isFetching, setIsFetching] = useState(false);
+  const [fetchResult, setFetchResult] = useState("");
 
   useEffect(() => {
     async function loadSchedule() {
@@ -50,31 +54,64 @@ export function SettingsForm() {
   }
 
   return (
-    <div className="mt-8 max-w-2xl bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
-      <h2 className="text-xl font-semibold mb-4">Digest Schedule</h2>
-      <div className="space-y-4">
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Delivery Time</label>
-          <input
-            type="time"
-            value={schedule}
-            onChange={(e) => setSchedule(e.target.value)}
-            disabled={isLoading || isSaving}
-            className="w-40 px-3 py-2 bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none disabled:opacity-50"
-          />
-        </div>
+    <div className="mt-8 flex flex-col gap-6">
+      <div className="max-w-2xl bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
+        <h2 className="text-xl font-semibold mb-4">Digest Schedule</h2>
+        <div className="space-y-4">
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Delivery Time</label>
+            <input
+              type="time"
+              value={schedule}
+              onChange={(e) => setSchedule(e.target.value)}
+              disabled={isLoading || isSaving}
+              className="w-40 px-3 py-2 bg-zinc-50 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none disabled:opacity-50"
+            />
+          </div>
 
+          <button
+            onClick={handleSave}
+            disabled={isLoading || isSaving}
+            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+          >
+            {isSaving ? "Saving..." : "Save Preferences"}
+          </button>
+          {message && (
+            <p className={`text-sm mt-2 ${message.includes('Failed') || message.includes('error') ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
+              {message}
+            </p>
+          )}
+        </div>
+      </div>
+
+      <div className="max-w-2xl bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
+        <h2 className="text-xl font-semibold mb-2">Test Gmail Backend</h2>
+        <p className="text-sm text-zinc-500 mb-4">Trigger the Express backend to fetch your recent promotional emails.</p>
         <button
-          onClick={handleSave}
-          disabled={isLoading || isSaving}
-          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+          onClick={async () => {
+            if (!session?.user?.id) return alert("Not logged in");
+            setIsFetching(true);
+            setFetchResult("");
+            try {
+              const res = await fetch(`http://localhost:8080/api/gmail/fetch?userId=${session.user.id}`);
+              const data = await res.json();
+              setFetchResult(JSON.stringify(data, null, 2));
+            } catch (err) {
+              setFetchResult(String(err));
+            } finally {
+              setIsFetching(false);
+            }
+          }}
+          disabled={isFetching}
+          className="px-4 py-2 bg-zinc-800 dark:bg-zinc-100 text-white dark:text-zinc-900 font-medium rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 mb-4"
         >
-          {isSaving ? "Saving..." : "Save Preferences"}
+          {isFetching ? "Fetching..." : "Test Fetch"}
         </button>
-        {message && (
-          <p className={`text-sm mt-2 ${message.includes('Failed') || message.includes('error') ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
-            {message}
-          </p>
+
+        {fetchResult && (
+          <pre className="bg-zinc-100 dark:bg-zinc-950 p-4 rounded-lg text-xs overflow-x-auto max-h-64 border border-zinc-200 dark:border-zinc-800">
+            <code>{fetchResult}</code>
+          </pre>
         )}
       </div>
     </div>

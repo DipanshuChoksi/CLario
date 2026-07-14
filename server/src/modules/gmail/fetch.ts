@@ -1,6 +1,7 @@
 import { google } from 'googleapis';
 import supabase from '../db.module';
 import { BaseError } from '../../shared';
+import { cleanHtml } from '../../utils';
 
 export async function fetchNewslettersForUser(userId: string) {
   // 1. Fetch user's Google OAuth tokens from next_auth.accounts
@@ -63,8 +64,32 @@ export async function fetchNewslettersForUser(userId: string) {
     const from = headers.find((h: any) => h.name === 'From')?.value || 'Unknown Sender';
     const date = headers.find((h: any) => h.name === 'Date')?.value || '';
 
-    // To get HTML/Text body, we'd need to parse the payload parts, but for testing we'll just return metadata
-    // HTML parsing will be handled in a separate utility later.
+    // Extract and decode body
+    //  TODO: Remove any from here and implement an interface for headers
+    let rawBody = '';
+    const extractBody = (part: any) => {
+      if (part.parts) {
+        for (const p of part.parts) {
+          extractBody(p);
+        }
+      } else {
+        if (part.mimeType === 'text/html') {
+          rawBody = part.body?.data || '';
+        } else if (part.mimeType === 'text/plain' && !rawBody) {
+          rawBody = part.body?.data || '';
+        }
+      }
+    };
+
+    if (payload?.parts) {
+      extractBody(payload);
+    } else if (payload?.body?.data) {
+      rawBody = payload.body.data;
+    }
+
+    const decodedStr = rawBody ? Buffer.from(rawBody, 'base64').toString('utf-8') : '';
+    // Clean HTML to Markdown using Turndown
+    const cleanedBody = decodedStr ? cleanHtml(decodedStr) : msg.data.snippet;
 
     fetchedEmails.push({
       id: msg.data.id,
@@ -72,6 +97,7 @@ export async function fetchNewslettersForUser(userId: string) {
       subject,
       from,
       date,
+      body: cleanedBody,
     });
   }
 

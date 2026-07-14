@@ -9,8 +9,6 @@ export function SettingsForm() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState("");
-  const [isFetching, setIsFetching] = useState(false);
-  const [fetchResult, setFetchResult] = useState("");
 
   useEffect(() => {
     async function loadSchedule() {
@@ -82,37 +80,6 @@ export function SettingsForm() {
             </p>
           )}
         </div>
-      </div>
-
-      <div className="max-w-2xl bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-sm">
-        <h2 className="text-xl font-semibold mb-2">Test Gmail Backend</h2>
-        <p className="text-sm text-zinc-500 mb-4">Trigger the Express backend to fetch your recent promotional emails.</p>
-        <button
-          onClick={async () => {
-            if (!session?.user?.id) return alert("Not logged in");
-            setIsFetching(true);
-            setFetchResult("");
-            try {
-              const res = await fetch(`http://localhost:8080/api/gmail/fetch?userId=${session.user.id}`);
-              const data = await res.json();
-              setFetchResult(JSON.stringify(data, null, 2));
-            } catch (err) {
-              setFetchResult(String(err));
-            } finally {
-              setIsFetching(false);
-            }
-          }}
-          disabled={isFetching}
-          className="px-4 py-2 bg-zinc-800 dark:bg-zinc-100 text-white dark:text-zinc-900 font-medium rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 mb-4"
-        >
-          {isFetching ? "Fetching..." : "Test Fetch"}
-        </button>
-
-        {fetchResult && (
-          <pre className="bg-zinc-100 dark:bg-zinc-950 p-4 rounded-lg text-xs overflow-x-auto max-h-64 border border-zinc-200 dark:border-zinc-800">
-            <code>{fetchResult}</code>
-          </pre>
-        )}
       </div>
     </div>
   );

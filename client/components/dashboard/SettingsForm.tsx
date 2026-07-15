@@ -1,10 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
 
 export function SettingsForm() {
-  const { data: session } = useSession();
   const [schedule, setSchedule] = useState("08:00");
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
